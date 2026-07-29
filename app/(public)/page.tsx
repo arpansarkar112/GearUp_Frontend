@@ -15,17 +15,33 @@ interface Gear {
   categoryId: string;
 }
 
-// Fetching gear data
+// Fetch gear data
 async function getGear(): Promise<Gear[]> {
   try {
+   
     const response = await fetch("https://gear-up-backend-pi.vercel.app/api/gear", {
-      next: { revalidate: 3600 },
+      cache: "no-store", 
     });
-    if (!response.ok) throw new Error("Failed to fetch gear");
+    
+    if (!response.ok) {
+      console.error(" API Fetch Failed. Status:", response.status);
+      return [];
+    }
+    
     const data = await response.json();
-    return data.data || data || [];
+    
+    console.log("RAW BACKEND RESPONSE:", JSON.stringify(data, null, 2));
+
+  
+    if (Array.isArray(data)) return data;
+    if (data.data && Array.isArray(data.data)) return data.data;
+    if (data.data && data.data.result && Array.isArray(data.data.result)) return data.data.result;
+    if (data.result && Array.isArray(data.result)) return data.result;
+
+    console.log(" Data fetched, but couldn't find an array inside it.");
+    return [];
   } catch (error) {
-    console.error("Error fetching gear:", error);
+    console.error(" Network or Parsing Error:", error);
     return [];
   }
 }
