@@ -1,10 +1,16 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google"
-
+import type { Metadata } from "next"
+import { Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toast"
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'})
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+
+export const metadata: Metadata = {
+  title: "GearUp | Rent Outdoor Gear",
+  description: "Rent Sports & Outdoor Gear Instantly",
+}
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -22,8 +28,11 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
-      <body>
+      <body className={inter.className}>
+        <main className="min-h-screen flex flex-col">
         <ThemeProvider>{children}</ThemeProvider>
+        </main>
+        <Toaster/>
       </body>
     </html>
   )
