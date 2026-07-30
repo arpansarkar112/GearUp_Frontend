@@ -70,3 +70,18 @@ export async function createRentalOrder(data: { startDate: string; endDate: stri
   }
   return res.json();
 }
+export async function fetchMyReviews(customerId: string) {
+  const res = await fetch(`${API_BASE_URL}/reviews`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Failed to fetch reviews");
+  }
+  const data = await res.json();
+  return {
+    ...data,
+    data: (data.data || []).filter((review: any) => review.customerId === customerId)
+  };
+}

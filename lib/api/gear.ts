@@ -27,3 +27,27 @@ export async function fetchGearById(id: string) {
   }
   return res.json();
 }
+
+export async function fetchAllReviews() {
+  const res = await fetch(`${API_BASE_URL}/reviews`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Failed to fetch all reviews");
+  }
+  return res.json();
+}
+
+export async function fetchReviewsByGearId(id: string) {
+  const res = await fetch(`${API_BASE_URL}/reviews/gear/${id}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Failed to fetch gear reviews");
+  }
+  return res.json();
+}
