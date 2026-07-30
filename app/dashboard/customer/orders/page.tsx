@@ -103,20 +103,21 @@ export default function CustomerOrdersPage() {
                 <TableHead className="font-semibold text-slate-600 py-4">Rental Period</TableHead>
                 <TableHead className="font-semibold text-slate-600 py-4">Status</TableHead>
                 <TableHead className="font-semibold text-slate-600 py-4">Amount</TableHead>
+                <TableHead className="font-semibold text-slate-600 py-4">Payment</TableHead>
                 <TableHead className="font-semibold text-slate-600 py-4 text-right px-6">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-16">
+                  <TableCell colSpan={7} className="text-center py-16">
                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-orange-500" />
                     <p className="text-slate-500 mt-4 font-medium">Loading your rentals...</p>
                   </TableCell>
                 </TableRow>
               ) : rentals.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-20 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-20 text-muted-foreground">
                     <div className="flex flex-col items-center justify-center">
                       <div className="w-24 h-24 mb-4 rounded-full bg-orange-100 flex items-center justify-center">
                         <ShoppingBag className="w-10 h-10 text-orange-500" />
@@ -149,8 +150,15 @@ export default function CustomerOrdersPage() {
                     <TableCell className="font-bold text-slate-700">
                       ${rental.totalAmount?.toFixed(2) || "0.00"}
                     </TableCell>
+                    <TableCell>
+                      {rental.paymentStatus === "COMPLETED" || rental.paymentStatus === "PAID" ? (
+                        <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none">PAID</Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-slate-500 border-slate-300">PENDING</Badge>
+                      )}
+                    </TableCell>
                     <TableCell className="text-right px-6 space-x-3">
-                      {rental.status === "CONFIRMED" && (
+                      {rental.status === "CONFIRMED" && rental.paymentStatus !== "COMPLETED" && rental.paymentStatus !== "PAID" && (
                         <Button
                           size="sm"
                           onClick={() => handlePay(rental.id)}
@@ -164,7 +172,7 @@ export default function CustomerOrdersPage() {
                       {rental.status === "RETURNED" && (
                         <ReviewModal gearItemIds={rental.gearItemIds || []} />
                       )}
-                      {rental.status !== "CONFIRMED" && rental.status !== "RETURNED" && (
+                      {((rental.status !== "CONFIRMED" && rental.status !== "RETURNED") || (rental.status === "CONFIRMED" && (rental.paymentStatus === "COMPLETED" || rental.paymentStatus === "PAID"))) && (
                          <span className="text-xs font-medium text-slate-400 italic">No action needed</span>
                       )}
                     </TableCell>

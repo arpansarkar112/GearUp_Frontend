@@ -132,6 +132,9 @@ export default function CustomerRentalsPage() {
                   <TableHead className="h-11 text-xs font-semibold text-muted-foreground">
                     Status
                   </TableHead>
+                  <TableHead className="h-11 text-xs font-semibold text-muted-foreground">
+                    Payment
+                  </TableHead>
                   <TableHead className="h-11 text-right text-xs font-semibold text-muted-foreground">
                     Action
                   </TableHead>
@@ -188,8 +191,17 @@ export default function CustomerRentalsPage() {
                       </Badge>
                     </TableCell>
 
+                    {/* Payment Status */}
+                    <TableCell className="py-3">
+                      {rental.paymentStatus === "COMPLETED" || rental.paymentStatus === "PAID" ? (
+                        <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none font-semibold">PAID</Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-muted-foreground font-semibold">PENDING</Badge>
+                      )}
+                    </TableCell>
+
                     <TableCell className="py-3 text-right space-x-2">
-                      {rental.status === "CONFIRMED" ? (
+                      {rental.status === "CONFIRMED" && rental.paymentStatus !== "COMPLETED" && rental.paymentStatus !== "PAID" ? (
                         <Button
                           size="sm"
                           onClick={() => handlePay(rental.id)}
