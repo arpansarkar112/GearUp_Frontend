@@ -98,7 +98,13 @@ export function ReviewModal({ gearItemIds }: { gearItemIds: string[] }) {
                 <FormItem>
                   <FormLabel>Rating (1-5)</FormLabel>
                   <FormControl>
-                    <Input type="number" min="1" max="5" {...field} />
+                    <Input 
+                      type="number" 
+                      min="1" 
+                      max="5" 
+                      {...field} 
+                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,7 +123,7 @@ export function ReviewModal({ gearItemIds }: { gearItemIds: string[] }) {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isLoading || !targetGearId}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Submit Review
             </Button>
