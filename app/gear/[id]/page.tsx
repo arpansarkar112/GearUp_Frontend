@@ -8,13 +8,10 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { fetchGearById, fetchReviewsByGearId } from "@/lib/api/gear";
-import { createRentalOrder } from "@/lib/api/customer";
 import { toast } from "@/components/ui/toast";
-import { ArrowLeft, Loader2, CheckCircle, ShieldAlert, Calendar as CalendarIcon, Star } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, ShieldAlert, Star, Backpack } from "lucide-react";
+import { useCartStore } from "@/lib/store/cartStore";
 import { UnifiedNavbar } from "@/components/layout/UnifiedNavbar";
 import { cn } from "@/lib/utils";
 
@@ -22,17 +19,14 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
   const unwrappedParams = use(params);
   const router = useRouter();
   
+  const { addToCart } = useCartStore();
   const [gear, setGear] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const averageRating = reviews.length > 0 
     ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length 
     : 0;
-  
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     async function loadGear() {
@@ -55,49 +49,6 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
     }
     loadGear();
   }, [unwrappedParams.id]);
-
-  const calculateTotal = () => {
-    if (!startDate || !endDate || !gear) return 0;
-    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return (diffDays + 1) * gear.price; 
-  };
-
-  const handleRent = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!startDate || !endDate) {
-      toast.add({ type: "error", title: "Missing Dates", description: "Please select both start and end dates." });
-      return;
-    }
-    
-    if (startDate > endDate) {
-      toast.add({ type: "error", title: "Invalid Dates", description: "End date cannot be before start date." });
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      await createRentalOrder({
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
-        gearItemIds: [gear.id],
-      });
-      toast.add({
-        type: "success",
-        title: "Order Placed Successfully",
-        description: "Your rental order has been created. Redirecting to payment...",
-      });
-      router.push("/dashboard/customer/orders");
-    } catch (error: any) {
-      toast.add({
-        type: "error",
-        title: "Failed to place order",
-        description: error.message || "An unexpected error occurred.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -122,7 +73,22 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
     <div className="min-h-screen bg-slate-50 pb-20">
       <UnifiedNavbar />
 
-      <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 mt-6">
+      <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 mt-2">
+        <div className="mb-6">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            asChild
+            className="rounded-full w-10 h-10 bg-white border-slate-200 text-slate-600 hover:text-orange-500 hover:border-orange-200 hover:bg-orange-50 shadow-sm transition-all"
+            title="Back to Gears"
+            aria-label="Back to Gears"
+          >
+            <Link href="/gear">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+          </Button>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-10">
           
           {/* Image & Gallery */}
@@ -200,106 +166,21 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
             </div>
 
             <Card className="border-none shadow-xl bg-white overflow-hidden rounded-3xl">
-              <CardContent className="p-6 sm:p-8">
-                <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <CalendarIcon className="w-6 h-6 text-orange-500" /> Select Rental Dates
-                </h3>
+              <CardContent className="p-6 sm:p-8 flex flex-col items-center justify-center space-y-6">
+                <div className="text-center">
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">Ready for your adventure?</h3>
+                  <p className="text-sm text-slate-500">Add this gear to your trip bag, and select your dates when you check out.</p>
+                </div>
                 
-                <form onSubmit={handleRent} className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div className="space-y-2 flex flex-col">
-                      <Label className="text-slate-600 font-semibold">Start Date</Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "h-12 w-full justify-start text-left font-normal rounded-xl bg-slate-50 border-slate-200 hover:text-slate-900",
-                              !startDate ? "text-slate-400" : "text-slate-900 font-semibold"
-                            )}
-                            disabled={!gear.isAvailable || isSubmitting}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200 shadow-xl" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={startDate}
-                            onSelect={(date) => {
-                              setStartDate(date);
-                              if (date && endDate && date > endDate) {
-                                setEndDate(date);
-                              }
-                            }}
-                            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    
-                    <div className="space-y-2 flex flex-col">
-                      <Label className="text-slate-600 font-semibold">End Date</Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "h-12 w-full justify-start text-left font-normal rounded-xl bg-slate-50 border-slate-200 hover:text-slate-900",
-                              !endDate ? "text-slate-400" : "text-slate-900 font-semibold"
-                            )}
-                            disabled={!gear.isAvailable || isSubmitting || !startDate}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 rounded-2xl border-slate-200 shadow-xl" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={endDate}
-                            onSelect={setEndDate}
-                            disabled={(date) => 
-                              date < new Date(new Date().setHours(0,0,0,0)) || 
-                              (startDate ? date < startDate : false)
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </div>
-
-                  {startDate && endDate && (
-                    <div className="bg-orange-50 p-6 rounded-2xl border border-orange-100 flex justify-between items-center animate-in fade-in zoom-in-95 duration-300">
-                      <div>
-                        <p className="text-sm font-semibold text-orange-800 mb-1">Estimated Total</p>
-                        <p className="text-xs text-orange-600/80">Excluding deposit & fees</p>
-                      </div>
-                      <div className="text-3xl font-black text-orange-600">
-                        ${calculateTotal().toFixed(2)}
-                      </div>
-                    </div>
-                  )}
-
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="w-full h-14 rounded-xl text-lg font-bold shadow-lg transition-transform active:scale-95 bg-orange-500 hover:bg-orange-600 text-white"
-                    disabled={!gear.isAvailable || isSubmitting || !startDate || !endDate}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      "Rent Now"
-                    )}
-                  </Button>
-                </form>
+                <Button 
+                  size="lg" 
+                  onClick={() => addToCart(gear)}
+                  className="w-full h-14 rounded-xl text-lg font-bold shadow-lg transition-transform active:scale-95 bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+                  disabled={!gear.isAvailable}
+                >
+                  <Backpack className="w-5 h-5" />
+                  {gear.isAvailable ? "Add to Trip" : "Currently Unavailable"}
+                </Button>
               </CardContent>
             </Card>
 

@@ -1,7 +1,9 @@
 const API_BASE_URL = "https://gear-up-backend-pi.vercel.app/api";
 
 export async function fetchAllGear() {
-  const res = await fetch(`${API_BASE_URL}/gear`, {
+  // We request a high limit so that our frontend sorting and filtering
+  // has access to the complete inventory.
+  const res = await fetch(`${API_BASE_URL}/gear?limit=1000`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -10,6 +12,20 @@ export async function fetchAllGear() {
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || "Failed to fetch gear");
+  }
+  return res.json();
+}
+
+export async function fetchAllCategories() {
+  const res = await fetch(`${API_BASE_URL}/gear/categories`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || "Failed to fetch categories");
   }
   return res.json();
 }
