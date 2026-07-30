@@ -99,6 +99,7 @@ export default function CustomerOrdersPage() {
             <TableHeader className="bg-slate-50/80">
               <TableRow className="hover:bg-transparent">
                 <TableHead className="font-semibold text-slate-600 py-4 px-6">Order ID</TableHead>
+                <TableHead className="font-semibold text-slate-600 py-4">Items</TableHead>
                 <TableHead className="font-semibold text-slate-600 py-4">Rental Period</TableHead>
                 <TableHead className="font-semibold text-slate-600 py-4">Status</TableHead>
                 <TableHead className="font-semibold text-slate-600 py-4">Amount</TableHead>
@@ -108,14 +109,14 @@ export default function CustomerOrdersPage() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-16">
+                  <TableCell colSpan={6} className="text-center py-16">
                     <Loader2 className="mx-auto h-8 w-8 animate-spin text-orange-500" />
                     <p className="text-slate-500 mt-4 font-medium">Loading your rentals...</p>
                   </TableCell>
                 </TableRow>
               ) : rentals.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-20 text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center py-20 text-muted-foreground">
                     <div className="flex flex-col items-center justify-center">
                       <div className="w-24 h-24 mb-4 rounded-full bg-orange-100 flex items-center justify-center">
                         <ShoppingBag className="w-10 h-10 text-orange-500" />
@@ -130,6 +131,16 @@ export default function CustomerOrdersPage() {
                   <TableRow key={rental.id} className="hover:bg-slate-50/80 transition-colors">
                     <TableCell className="font-bold text-sm text-slate-700 px-6">
                       #{rental.id.slice(0, 8).toUpperCase()}
+                    </TableCell>
+                    <TableCell className="font-medium text-slate-600">
+                      <div className="flex flex-col gap-1 max-w-[200px]">
+                        {rental.orderItems?.map((item: any, index: number) => (
+                          <div key={index} className="flex items-center gap-2 truncate">
+                            <span className="w-1.5 h-1.5 rounded-full bg-orange-400 flex-shrink-0" />
+                            <span className="truncate text-xs" title={item.gearItem?.name}>{item.gearItem?.name || "Unknown Gear"}</span>
+                          </div>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell className="font-medium text-slate-600">
                       {new Date(rental.startDate).toLocaleDateString()} <span className="text-slate-300 mx-1">→</span> {new Date(rental.endDate).toLocaleDateString()}
