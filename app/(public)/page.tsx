@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
 interface Gear {
   id: string;
   name: string;
@@ -52,8 +51,8 @@ export default async function HomePage() {
 
   return (
     <div className="container mx-auto px-4 md:px-8">
-      {/* HERO */}
-      <div className="min-h-[80vh] flex items-center py-12 md:py-0">
+        {/* HERO */}
+        <div className="min-h-[80vh] flex items-center py-12 md:py-0">
         <Card className="border-none bg-transparent shadow-none w-full">
           <CardContent className="flex flex-col-reverse md:flex-row items-center justify-between p-0 gap-12">
             <div className="w-full md:w-1/2 space-y-6">
@@ -109,62 +108,59 @@ export default async function HomePage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {featuredGear.map((item) => (
-              <Card key={item.id} className="group overflow-hidden border bg-card transition-all hover:shadow-xl hover:-translate-y-1 flex flex-col">
-                {/* Image Area */}
-                <div className="relative h-56 w-full bg-muted overflow-hidden">
-                   <div className="absolute top-3 left-3 z-10">
-                    {item.isAvailable ? (
-                      <Badge className="bg-white text-black hover:bg-gray-100 font-semibold shadow-sm">Available</Badge>
-                    ) : (
-                      <Badge variant="destructive" className="font-semibold shadow-sm">Booked</Badge>
-                    )}
+              <Link key={item.id} href={`/gear/${item.id}`} className="group block h-full">
+                <Card className="overflow-hidden border bg-card transition-all hover:shadow-xl hover:-translate-y-1 flex flex-col h-full cursor-pointer">
+                  {/* Image Area */}
+                  <div className="relative h-56 w-full bg-muted overflow-hidden">
+                     <div className="absolute top-3 left-3 z-10">
+                      {item.isAvailable ? (
+                        <Badge className="bg-white text-black hover:bg-gray-100 font-semibold shadow-sm">Available</Badge>
+                      ) : (
+                        <Badge variant="destructive" className="font-semibold shadow-sm">Booked</Badge>
+                      )}
+                    </div>
+                    {/* Fallback image if backend doesn't provide one yet */}
+                    <Image
+                      src={`https://images.unsplash.com/photo-1673121414328-52eff37bc6d0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bW91bnRhaW4lMjBiaWtlc3xlbnwwfHwwfHx8MA%3D%3D`} 
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
                   </div>
-                  {/* Fallback image if backend doesn't provide one yet */}
-                  <Image
-                    src={`https://images.unsplash.com/photo-1673121414328-52eff37bc6d0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bW91bnRhaW4lMjBiaWtlc3xlbnwwfHwwfHx8MA%3D%3D`} 
-                    alt={item.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                
-                {/* Content Area */}
-                <CardContent className="p-5 flex-grow">
-                  <div className="flex justify-between items-start mb-2 gap-2">
-                    <h3 className="font-bold text-lg line-clamp-1">{item.name}</h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                    {item.description}
-                  </p>
-                  <p className="text-sm font-medium text-orange-500 mb-2">
-                    {item.brand}
-                  </p>
-                  <div className="flex items-baseline gap-1 mt-auto">
-                    <span className="text-2xl font-black">${item.price}</span>
-                    <span className="text-sm text-muted-foreground">/ day</span>
-                  </div>
-                </CardContent>
-                
-                {/* Action Area */}
-                <CardFooter className="p-5 pt-0 mt-auto">
-                  <Button 
-                    className="w-full rounded-xl font-semibold" 
-                    variant={item.isAvailable ? "default" : "secondary"}
-                    disabled={!item.isAvailable}
-                    asChild={item.isAvailable}
-                  >
-                    {item.isAvailable ? (
-                      <Link href={`/gear/${item.id}`}>View Details</Link>
-                    ) : (
-                      "Currently Unavailable"
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
+                  
+                  {/* Content Area */}
+                  <CardContent className="p-5 flex-grow">
+                    <div className="flex justify-between items-start mb-2 gap-2">
+                      <h3 className="font-bold text-lg line-clamp-1 group-hover:text-orange-500 transition-colors">{item.name}</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                      {item.description}
+                    </p>
+                    <p className="text-sm font-medium text-orange-500 mb-2">
+                      {item.brand}
+                    </p>
+                    <div className="flex items-baseline gap-1 mt-auto">
+                      <span className="text-2xl font-black">${item.price}</span>
+                      <span className="text-sm text-muted-foreground">/ day</span>
+                    </div>
+                  </CardContent>
+                  
+                  {/* Action Area */}
+                  <CardFooter className="p-5 pt-0 mt-auto">
+                    <Button 
+                      className="w-full rounded-xl font-semibold group-hover:bg-orange-600 transition-colors" 
+                      variant={item.isAvailable ? "default" : "secondary"}
+                      disabled={!item.isAvailable}
+                    >
+                      {item.isAvailable ? "View Details" : "Currently Unavailable"}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </Link>
             ))}
           </div>
         )}
       </section>
-    </div>
+      </div>
   );
 }
