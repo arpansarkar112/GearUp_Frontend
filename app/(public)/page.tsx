@@ -137,13 +137,13 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {featuredGear.map((item) => (
                 <div key={item.id} className="group block h-full">
-                  <Card className="overflow-hidden border border-gray-200 bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full rounded-2xl cursor-pointer">
+                  <Card className="overflow-hidden border border-border bg-card transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full rounded-2xl cursor-pointer">
                     
                     {/* Image Area */}
-                    <div className="relative h-56 w-full bg-gray-100 overflow-hidden">
+                    <div className="relative h-56 w-full bg-muted overflow-hidden">
                       {/* Price Badge */}
                       <div className="absolute top-3 right-3 z-10">
-                        <Badge className="bg-white text-black hover:bg-white shadow-sm border border-gray-100 font-bold px-3 py-1.5 rounded-full text-sm">
+                        <Badge className="bg-background/90 backdrop-blur-sm text-foreground hover:bg-background shadow-sm border border-border font-bold px-3 py-1.5 rounded-full text-sm">
                           ${item.price}/day
                         </Badge>
                       </div>
@@ -169,24 +169,24 @@ export default async function HomePage() {
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-orange-500">
                             <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
                           </svg>
-                          <span className="text-sm font-bold text-gray-900">5.0</span>
-                          <span className="text-sm text-gray-500">(3)</span>
+                          <span className="text-sm font-bold text-foreground">5.0</span>
+                          <span className="text-sm text-muted-foreground">(3)</span>
                         </div>
                       </div>
                       
                       {/* Title */}
-                      <h3 className="font-bold text-xl text-[#8b4513] leading-tight line-clamp-1 mb-2">
+                      <h3 className="font-bold text-xl text-[#8b4513] dark:text-orange-400 leading-tight line-clamp-1 mb-2">
                         {item.name}
                       </h3>
                       
                       {/* Description */}
-                      <p className="text-sm text-gray-500 line-clamp-1 mb-4">
+                      <p className="text-sm text-muted-foreground line-clamp-1 mb-4">
                         {item.description}
                       </p>
                       
                       {/* View Details Button */}
                       <div className="mt-auto pt-2">
-                        <Button className="w-full bg-[#8b4513] hover:bg-[#6b340e] text-white font-bold rounded-lg h-11" asChild>
+                        <Button className="w-full bg-[#8b4513] hover:bg-[#6b340e] dark:bg-orange-600 dark:hover:bg-orange-700 text-white font-bold rounded-lg h-11" asChild>
                           <Link href={`/gear/${item.id}`}>View Details</Link>
                         </Button>
                       </div>
