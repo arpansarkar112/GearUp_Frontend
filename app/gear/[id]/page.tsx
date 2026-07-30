@@ -11,10 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { fetchGearById } from "@/lib/api/gear";
+import { fetchGearById, fetchReviewsByGearId } from "@/lib/api/gear";
 import { createRentalOrder } from "@/lib/api/customer";
 import { toast } from "@/components/ui/toast";
-import { ArrowLeft, Loader2, CheckCircle, ShieldAlert, Calendar as CalendarIcon } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, ShieldAlert, Calendar as CalendarIcon, Star } from "lucide-react";
 import { UnifiedNavbar } from "@/components/layout/UnifiedNavbar";
 import { cn } from "@/lib/utils";
 
@@ -23,8 +23,13 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
   const router = useRouter();
   
   const [gear, setGear] = useState<any>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const averageRating = reviews.length > 0 
+    ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length 
+    : 0;
   
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -32,8 +37,12 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
   useEffect(() => {
     async function loadGear() {
       try {
-        const response = await fetchGearById(unwrappedParams.id);
-        setGear(response.data);
+        const [gearRes, reviewsRes] = await Promise.all([
+          fetchGearById(unwrappedParams.id),
+          fetchReviewsByGearId(unwrappedParams.id).catch(() => ({ data: [] }))
+        ]);
+        setGear(gearRes.data);
+        setReviews(reviewsRes.data || []);
       } catch (error) {
         toast.add({
           type: "error",
@@ -149,7 +158,31 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
               <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight mb-2">
                 {gear.name}
               </h1>
-              <p className="text-lg font-medium text-slate-500 mb-6">by {gear.brand || "GearUp"}</p>
+              <p className="text-lg font-medium text-slate-500 mb-2">by {gear.brand || "GearUp"}</p>
+              
+              <div className="flex items-center gap-2 mb-6">
+                <div className="flex items-center gap-1 text-orange-500">
+                  <Star className="h-5 w-5 fill-orange-500" />
+                  <span className="font-bold text-slate-800 text-lg">{averageRating > 0 ? averageRating.toFixed(1) : "New"}</span>
+                </div>
+                {reviews.length > 0 && (
+                  <>
+                    <span className="text-slate-300">•</span>
+                    <Link href="#reviews" onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
+                    }} className="text-sm font-medium text-slate-500 hover:text-orange-500 underline underline-offset-4 transition-colors">
+                      See all {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}
+                    </Link>
+                  </>
+                )}
+                {reviews.length === 0 && (
+                  <>
+                    <span className="text-slate-300">•</span>
+                    <span className="text-sm font-medium text-slate-400">No reviews yet</span>
+                  </>
+                )}
+              </div>
               
               <div className="flex items-baseline gap-2 mb-6">
                 <span className="text-4xl font-black text-orange-500">${gear.price}</span>
@@ -271,6 +304,52 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
             </Card>
 
           </div>
+        </div>
+
+        {/* Customer Reviews Section */}
+        <div id="reviews" className="scroll-mt-24 mt-16 pt-16 border-t border-slate-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <h2 className="text-3xl font-black text-slate-900 flex items-center gap-2">
+              <Star className="h-8 w-8 text-orange-500 fill-orange-500" /> Customer Reviews
+            </h2>
+            <div className="inline-flex items-center justify-center px-4 py-2 bg-slate-100 rounded-full text-sm font-bold text-slate-700">
+              {reviews.length} {reviews.length === 1 ? 'Review' : 'Reviews'}
+            </div>
+          </div>
+
+          {reviews.length === 0 ? (
+            <div className="bg-white rounded-3xl p-12 text-center border-dashed border-2 border-slate-200">
+              <Star className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-slate-700">No reviews yet</h3>
+              <p className="text-slate-500 mt-2">Be the first to review this gear after your rental!</p>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {reviews.map((review) => (
+                <Card key={review.id} className="overflow-hidden border-slate-200 shadow-sm transition-all hover:shadow-md bg-white">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-1 text-orange-500 mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`h-4 w-4 ${i < review.rating ? "fill-orange-500" : "fill-transparent text-slate-300"}`} />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-3 mb-4">
+                       <div className="h-10 w-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm shadow-sm uppercase">
+                         {review.customer?.name?.[0] || "C"}
+                       </div>
+                       <div>
+                         <p className="text-sm font-bold text-slate-800">{review.customer?.name || "Customer"}</p>
+                         <p className="text-xs text-slate-400 font-medium">{format(new Date(review.createdAt), "MMM d, yyyy")}</p>
+                       </div>
+                    </div>
+                    <p className="text-sm text-slate-600 leading-relaxed italic">
+                      "{review.comment}"
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

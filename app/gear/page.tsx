@@ -3,7 +3,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { fetchAllGear } from "@/lib/api/gear";
+import { Star } from "lucide-react";
+import { fetchAllGear, fetchAllReviews } from "@/lib/api/gear";
 import { UnifiedNavbar } from "@/components/layout/UnifiedNavbar";
 
 export const metadata = {
@@ -13,11 +14,16 @@ export const metadata = {
 
 export default async function GearCatalogPage() {
   let gearItems = [];
+  let allReviews = [];
   try {
-    const response = await fetchAllGear();
-    gearItems = response.data || [];
+    const [gearResponse, reviewResponse] = await Promise.all([
+      fetchAllGear(),
+      fetchAllReviews().catch(() => ({ data: [] }))
+    ]);
+    gearItems = gearResponse.data || [];
+    allReviews = reviewResponse.data || [];
   } catch (error) {
-    console.error("Failed to load gear:", error);
+    console.error("Failed to load gear or reviews:", error);
   }
 
   return (
@@ -43,6 +49,10 @@ export default async function GearCatalogPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {gearItems.map((item: any) => {
               const categoryName = typeof item.category === 'object' ? item.category?.name : item.category;
+              const itemReviews = allReviews.filter((r: any) => r.gearItemId === item.id || r.gearId === item.id);
+              const averageRating = itemReviews.length > 0 
+                ? itemReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / itemReviews.length 
+                : 0;
               return (
               <Card key={item.id} className="overflow-hidden border-none shadow-md hover:shadow-xl transition-all hover:-translate-y-1 bg-white flex flex-col h-full">
                 <div className="aspect-[4/3] bg-slate-100 relative group overflow-hidden">
@@ -65,7 +75,15 @@ export default async function GearCatalogPage() {
                 </div>
                 
                 <CardHeader className="p-5 pb-2">
-                  <div className="text-xs font-bold text-orange-500 mb-1 uppercase tracking-wider">{categoryName || "Gear"}</div>
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="text-xs font-bold text-orange-500 uppercase tracking-wider">{categoryName || "Gear"}</div>
+                    {itemReviews.length > 0 && (
+                      <div className="flex items-center gap-1 text-sm font-semibold text-slate-700">
+                        <Star className="h-4 w-4 fill-orange-500 text-orange-500" />
+                        {averageRating.toFixed(1)} <span className="text-slate-400 font-normal">({itemReviews.length})</span>
+                      </div>
+                    )}
+                  </div>
                   <h3 className="font-bold text-lg text-slate-800 leading-tight line-clamp-1">{item.name}</h3>
                 </CardHeader>
                 
