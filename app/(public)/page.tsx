@@ -160,7 +160,7 @@ export default async function HomePage() {
                     <CardContent className="p-5 flex-grow flex flex-col">
                       <div className="flex justify-between items-center mb-2">
                         {/* Category */}
-                        <p className="text-sm font-bold tracking-wider text-orange-500 uppercase">
+                        <p className="text-xs font-bold tracking-wider text-orange-500 uppercase">
                           {item.category?.name || "VEHICLES"}
                         </p>
                         
@@ -175,7 +175,7 @@ export default async function HomePage() {
                       </div>
                       
                       {/* Title */}
-                      <h3 className="font-bold text-xl text-[#8b4513] dark:text-orange-400 leading-tight line-clamp-1 mb-2">
+                      <h3 className="font-bold text-lg text-black dark:text-white leading-tight line-clamp-1 mb-2">
                         {item.name}
                       </h3>
                       
