@@ -33,7 +33,6 @@ GearUp is a modern, responsive Next.js application for a sports and outdoor equi
        ↓
 [Track Order Status] → [Mark as Returned] → [Leave Review Form]
 ```
-> **UI Focus**: Ensure date pickers prevent selecting past dates or overlapping unavailable dates. Use toast notifications for order placement success/failure.
 
 ### 🏪 Provider Journey
 ```text
