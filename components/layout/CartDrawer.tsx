@@ -56,7 +56,7 @@ export function CartDrawer() {
       });
       clearCart();
       setIsCartOpen(false);
-      router.push("/dashboard/customer/orders");
+      router.push("/dashboard/customer/rentals");
     } catch (error: any) {
       toast.add({
         type: "error",

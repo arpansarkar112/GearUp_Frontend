@@ -78,7 +78,7 @@ export default function CustomerRentalsPage() {
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-black tracking-tight text-foreground">
-            <ReceiptText className="h-6 w-6 text-orange-500" /> My Rental History
+            <ReceiptText className="h-6 w-6 text-orange-500" /> My Rentals
           </h2>
           <p className="mt-1 text-sm text-slate-500">
             View and manage all your past and current rentals.
