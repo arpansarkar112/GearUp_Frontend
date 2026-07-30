@@ -15,6 +15,7 @@ interface Gear {
   stock: number;
   isAvailable: boolean;
   categoryId: string;
+  category?: { name: string };
   imageUrl?: string;
   image?: string;
 }
@@ -48,7 +49,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       {/* CUSTOM HOMEPAGE NAVBAR */}
-      <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border shadow-sm">
         <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="text-3xl font-black text-orange-500 tracking-tight">
             GearUp
@@ -133,47 +134,65 @@ export default async function HomePage() {
               <p className="text-lg text-muted-foreground font-medium">Inventory loading or currently unavailable.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {featuredGear.map((item) => (
-                <Link key={item.id} href={`/gear/${item.id}`} className="group block h-full">
-                  <Card className="overflow-hidden border border-border bg-card transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 flex flex-col h-full rounded-2xl cursor-pointer">
+                <div key={item.id} className="group block h-full">
+                  <Card className="overflow-hidden border border-gray-200 bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full rounded-2xl cursor-pointer">
                     
                     {/* Image Area */}
-                    <div className="relative h-60 w-full bg-muted overflow-hidden">
-                       <div className="absolute top-4 left-4 z-10">
-                        {item.isAvailable ? (
-                          <Badge className="bg-background/90 text-foreground hover:bg-background backdrop-blur-md shadow-sm border-none font-bold px-3 py-1">Available</Badge>
-                        ) : (
-                          <Badge variant="destructive" className="font-bold shadow-sm px-3 py-1">Booked</Badge>
-                        )}
+                    <div className="relative h-56 w-full bg-gray-100 overflow-hidden">
+                      {/* Price Badge */}
+                      <div className="absolute top-3 right-3 z-10">
+                        <Badge className="bg-white text-black hover:bg-white shadow-sm border border-gray-100 font-bold px-3 py-1.5 rounded-full text-sm">
+                          ${item.price}/day
+                        </Badge>
                       </div>
+                      
                       <Image
                         src={item.imageUrl || item.image || `https://images.unsplash.com/photo-1673121414328-52eff37bc6d0?w=500&auto=format&fit=crop&q=60`} 
                         alt={item.name}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
                     
                     {/* Content Area */}
-                    <CardContent className="p-6 flex-grow">
-                      <p className="text-xs font-bold tracking-wider text-orange-500 uppercase mb-2">
-                        {item.brand}
-                      </p>
-                      <h3 className="font-black text-xl text-foreground leading-tight line-clamp-2 mb-3 group-hover:text-orange-500 transition-colors">
+                    <CardContent className="p-5 flex-grow flex flex-col">
+                      <div className="flex justify-between items-center mb-2">
+                        {/* Category */}
+                        <p className="text-sm font-bold tracking-wider text-orange-500 uppercase">
+                          {item.category?.name || "VEHICLES"}
+                        </p>
+                        
+                        {/* Reviews */}
+                        <div className="flex items-center gap-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-orange-500">
+                            <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-sm font-bold text-gray-900">5.0</span>
+                          <span className="text-sm text-gray-500">(3)</span>
+                        </div>
+                      </div>
+                      
+                      {/* Title */}
+                      <h3 className="font-bold text-xl text-[#8b4513] leading-tight line-clamp-1 mb-2">
                         {item.name}
                       </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-4 leading-relaxed">
+                      
+                      {/* Description */}
+                      <p className="text-sm text-gray-500 line-clamp-1 mb-4">
                         {item.description}
                       </p>
                       
-                      <div className="flex items-baseline gap-1 mt-auto pt-4 border-t border-border">
-                        <span className="text-3xl font-black text-foreground">${item.price}</span>
-                        <span className="text-sm font-medium text-muted-foreground">/ day</span>
+                      {/* View Details Button */}
+                      <div className="mt-auto pt-2">
+                        <Button className="w-full bg-[#8b4513] hover:bg-[#6b340e] text-white font-bold rounded-lg h-11" asChild>
+                          <Link href={`/gear/${item.id}`}>View Details</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
-                </Link>
+                </div>
               ))}
             </div>
           )}
