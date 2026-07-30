@@ -59,12 +59,6 @@ export function UnifiedNavbar() {
           <Link href={isLoggedIn || isDashboard ? "/dashboard/customer" : "/auth/login"} className={`hover:text-orange-500 transition-colors ${pathname === '/dashboard/customer' ? 'text-orange-500' : ''}`}>
             Dashboard
           </Link>
-
-          {isLoggedIn && (
-             <Link href="/dashboard/customer#rentals" className="hover:text-orange-500 transition-colors">
-               My Rentals
-             </Link>
-          )}
           
           {/* Dashboard Actions */}
           {user && (
