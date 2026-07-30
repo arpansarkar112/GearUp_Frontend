@@ -5,14 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { EditProfileModal } from "@/components/pages/dashboard/EditProfileModal";
-import { LogOut } from "lucide-react";
+import { LogOut, Backpack } from "lucide-react";
 import { fetchMyProfile } from "@/lib/api/user";
+import { useCartStore } from "@/lib/store/cartStore";
+import { CartDrawer } from "@/components/layout/CartDrawer";
 
 export function UnifiedNavbar() {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
+  
+  const { items: cartItems, setIsCartOpen } = useCartStore();
 
   useEffect(() => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -48,10 +52,12 @@ export function UnifiedNavbar() {
           )}
         </div>
         
-        {/* Navigation Links */}
+        {/* Navigation Links & Actions */}
         <nav className="flex items-center gap-6 text-sm font-semibold text-slate-600">
-          <Link href="/" className="hover:text-orange-500 transition-colors hidden sm:block">Home</Link>
-          
+          <Link href="/categories" className={`hover:text-orange-500 transition-colors ${pathname === '/categories' ? 'text-orange-500' : ''}`}>
+            Categories
+          </Link>
+
           <Link href="/gear" className={`hover:text-orange-500 transition-colors ${pathname === '/gear' ? 'text-orange-500' : ''}`}>
             Gears
           </Link>
@@ -60,18 +66,37 @@ export function UnifiedNavbar() {
             Dashboard
           </Link>
           
-          {/* Dashboard Actions */}
-          {user && (
-            <div className="flex items-center gap-3 ml-2 pl-4 border-l border-slate-200">
-              <EditProfileModal user={user} onSuccess={() => fetchMyProfile().then(res => setUser(res.data)).catch(console.error)} />
-              <Button variant="ghost" size="icon-sm" onClick={handleLogout} className="text-slate-400 hover:text-red-500 hover:bg-red-50">
-                <LogOut className="w-4 h-4" />
-              </Button>
-            </div>
-          )}
+          {/* Unified Action Cluster */}
+          <div className="flex items-center gap-2 ml-2 pl-4 border-l border-slate-200">
+            {/* Trip Bag Button */}
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative flex items-center justify-center p-2 text-slate-500 hover:text-orange-500 hover:bg-orange-50 rounded-full transition-all cursor-pointer group"
+              aria-label="Trip Bag"
+              title="Trip Bag"
+            >
+              <Backpack className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              {cartItems.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-sm ring-2 ring-white">
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
+
+            {/* User Profile & Logout */}
+            {user && (
+              <>
+                <EditProfileModal user={user} onSuccess={() => fetchMyProfile().then(res => setUser(res.data)).catch(console.error)} />
+                <Button variant="ghost" size="icon-sm" onClick={handleLogout} className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full h-9 w-9 flex-shrink-0" aria-label="Log Out" title="Log Out">
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </>
+            )}
+          </div>
         </nav>
         
       </div>
+      <CartDrawer />
     </header>
   );
 }

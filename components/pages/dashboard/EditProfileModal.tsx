@@ -49,9 +49,8 @@ export function EditProfileModal({ user, onSuccess }: EditProfileModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={<Button variant="secondary" size="sm" className="gap-2 font-bold bg-orange-100 text-orange-700 hover:bg-orange-200 hover:text-orange-800 border-none shadow-sm" />}>
+      <DialogTrigger render={<Button variant="ghost" size="icon-sm" className="text-slate-500 hover:text-orange-500 hover:bg-orange-50 rounded-full h-9 w-9 flex-shrink-0" title="Edit Profile" aria-label="Edit Profile" />}>
         <UserCog className="w-4 h-4" />
-        Edit Profile
       </DialogTrigger>
       
       <DialogContent className="sm:max-w-[425px] rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8">
