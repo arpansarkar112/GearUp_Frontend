@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toast"
 
@@ -29,12 +28,10 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
       <body className={inter.className} suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <main className="min-h-screen flex flex-col">
-            {children}
-          </main>
-          <Toaster/>
-        </ThemeProvider>
+        <main className="min-h-screen flex flex-col">
+          {children}
+        </main>
+        <Toaster/>
       </body>
     </html>
   )
