@@ -52,12 +52,10 @@ export default async function HomePage() {
 
   return (
     <div className="container mx-auto px-4 md:px-8">
-      {/* HERO SECTION */}
+      {/* HERO */}
       <div className="min-h-[80vh] flex items-center py-12 md:py-0">
         <Card className="border-none bg-transparent shadow-none w-full">
           <CardContent className="flex flex-col-reverse md:flex-row items-center justify-between p-0 gap-12">
-            
-            {/* Left Column: Text & CTA */}
             <div className="w-full md:w-1/2 space-y-6">
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-foreground leading-[1.1]">
                 Gear Up for Your Next <span className="text-orange-500">Adventure</span>
@@ -75,7 +73,6 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Right Column: Image */}
             <div className="w-full md:w-1/2 flex justify-center md:justify-end relative h-[300px] md:h-[500px]">
               <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl">
                 <Image
@@ -154,11 +151,13 @@ export default async function HomePage() {
                     className="w-full rounded-xl font-semibold" 
                     variant={item.isAvailable ? "default" : "secondary"}
                     disabled={!item.isAvailable}
-                    asChild
+                    asChild={item.isAvailable}
                   >
-                    <Link href={`/gear/${item.id}`}>
-                      {item.isAvailable ? "View Details" : "Currently Unavailable"}
-                    </Link>
+                    {item.isAvailable ? (
+                      <Link href={`/gear/${item.id}`}>View Details</Link>
+                    ) : (
+                      "Currently Unavailable"
+                    )}
                   </Button>
                 </CardFooter>
               </Card>

@@ -28,11 +28,13 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
-      <body className={inter.className}>
-        <main className="min-h-screen flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
-        </main>
-        <Toaster/>
+      <body className={inter.className} suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <main className="min-h-screen flex flex-col">
+            {children}
+          </main>
+          <Toaster/>
+        </ThemeProvider>
       </body>
     </html>
   )
