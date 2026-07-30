@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { fetchGearById, fetchReviewsByGearId } from "@/lib/api/gear";
+import { fetchMyProfile } from "@/lib/api/user";
 import { toast } from "@/components/ui/toast";
 import { ArrowLeft, Loader2, CheckCircle, ShieldAlert, Star, Backpack } from "lucide-react";
 import { useCartStore } from "@/lib/store/cartStore";
@@ -22,6 +23,7 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
   const { addToCart } = useCartStore();
   const [gear, setGear] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   
   const averageRating = reviews.length > 0 
@@ -47,7 +49,21 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
         setIsLoading(false);
       }
     }
+
+    async function loadUser() {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (token) {
+        try {
+          const res = await fetchMyProfile();
+          setUser(res.data);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
     loadGear();
+    loadUser();
   }, [unwrappedParams.id]);
 
   if (isLoading) {
@@ -165,24 +181,33 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
               </div>
             </div>
 
-            <Card className="border-none shadow-xl bg-white overflow-hidden rounded-3xl">
-              <CardContent className="p-6 sm:p-8 flex flex-col items-center justify-center space-y-6">
-                <div className="text-center">
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">Ready for your adventure?</h3>
-                  <p className="text-sm text-slate-500">Add this gear to your trip bag, and select your dates when you check out.</p>
-                </div>
-                
-                <Button 
-                  size="lg" 
-                  onClick={() => addToCart(gear)}
-                  className="w-full h-14 rounded-xl text-lg font-bold shadow-lg transition-transform active:scale-95 bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
-                  disabled={!gear.isAvailable}
-                >
-                  <Backpack className="w-5 h-5" />
-                  {gear.isAvailable ? "Add to Trip" : "Currently Unavailable"}
-                </Button>
-              </CardContent>
-            </Card>
+            {user?.role === 'PROVIDER' || user?.role === 'ADMIN' ? (
+              <Card className="border-none shadow-xl bg-white overflow-hidden rounded-3xl">
+                <CardContent className="p-6 sm:p-8 flex flex-col items-center justify-center space-y-4 text-center">
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">Partner View</h3>
+                  <p className="text-sm text-slate-500">As a {user.role.toLowerCase()}, you cannot rent gear. Please log in as a customer to create reservations.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="border-none shadow-xl bg-white overflow-hidden rounded-3xl">
+                <CardContent className="p-6 sm:p-8 flex flex-col items-center justify-center space-y-6">
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold text-slate-800 mb-2">Ready for your adventure?</h3>
+                    <p className="text-sm text-slate-500">Add this gear to your trip bag, and select your dates when you check out.</p>
+                  </div>
+                  
+                  <Button 
+                    size="lg" 
+                    onClick={() => addToCart(gear)}
+                    className="w-full h-14 rounded-xl text-lg font-bold shadow-lg transition-transform active:scale-95 bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+                    disabled={!gear.isAvailable}
+                  >
+                    <Backpack className="w-5 h-5" />
+                    {gear.isAvailable ? "Add to Trip" : "Currently Unavailable"}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
 
           </div>
         </div>

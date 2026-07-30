@@ -12,6 +12,8 @@ interface Gear {
   stock: number;
   isAvailable: boolean;
   categoryId: string;
+  imageUrl?: string;
+  image?: string;
 }
 
 // Fetch gear data
@@ -121,7 +123,7 @@ export default async function HomePage() {
                     </div>
                     {/* Fallback image if backend doesn't provide one yet */}
                     <Image
-                      src={`https://images.unsplash.com/photo-1673121414328-52eff37bc6d0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bW91bnRhaW4lMjBiaWtlc3xlbnwwfHwwfHx8MA%3D%3D`} 
+                      src={item.imageUrl || item.image || `https://images.unsplash.com/photo-1673121414328-52eff37bc6d0?w=500&auto=format&fit=crop&q=60`} 
                       alt={item.name}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
