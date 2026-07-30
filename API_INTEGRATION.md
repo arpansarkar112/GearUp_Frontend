@@ -1,6 +1,6 @@
 # GearUp Frontend - API Integration Map
 
-This document outlines how the Next.js frontend components are mapped to the backend endpoints to fulfill the mandatory assignment requirements.
+This document outlines how the Next.js frontend components are mapped to the backend endpoints.
 
 ## 🟢 Customer Endpoints
 
