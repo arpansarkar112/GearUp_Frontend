@@ -71,8 +71,8 @@ export function UnifiedNavbar() {
           
           {/* Unified Action Cluster */}
           <div className="flex items-center gap-2 ml-2 pl-4 border-l border-slate-200">
-            {/* Trip Bag Button - Hidden for Providers/Admins */}
-            {(!user || user.role === 'CUSTOMER') && (
+            {/* Trip Bag Button - Only for Customers */}
+            {user && user.role === 'CUSTOMER' && (
               <button 
                 onClick={() => setIsCartOpen(true)}
                 className="relative flex items-center justify-center p-2 text-slate-500 hover:text-orange-500 hover:bg-orange-50 rounded-full transition-all cursor-pointer group"

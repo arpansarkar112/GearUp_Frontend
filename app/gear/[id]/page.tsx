@@ -198,12 +198,18 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
                   
                   <Button 
                     size="lg" 
-                    onClick={() => addToCart(gear)}
+                    onClick={() => {
+                      if (!user) {
+                        router.push('/auth/login');
+                      } else {
+                        addToCart(gear);
+                      }
+                    }}
                     className="w-full h-14 rounded-xl text-lg font-bold shadow-lg transition-transform active:scale-95 bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
                     disabled={!gear.isAvailable}
                   >
                     <Backpack className="w-5 h-5" />
-                    {gear.isAvailable ? "Add to Trip" : "Currently Unavailable"}
+                    {gear.isAvailable ? (user ? "Add to Trip" : "Log In to Rent") : "Currently Unavailable"}
                   </Button>
                 </CardContent>
               </Card>

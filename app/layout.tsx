@@ -3,6 +3,7 @@ import { Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toast"
+import { Footer } from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -27,10 +28,11 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
-      <body className={inter.className} suppressHydrationWarning>
-        <main className="min-h-screen flex flex-col">
+      <body className={cn(inter.className, "min-h-screen flex flex-col")} suppressHydrationWarning>
+        <main className="flex-1 flex flex-col">
           {children}
         </main>
+        <Footer />
         <Toaster/>
       </body>
     </html>
