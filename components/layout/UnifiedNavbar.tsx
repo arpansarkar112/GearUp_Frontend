@@ -42,11 +42,11 @@ export function UnifiedNavbar() {
             GearUp
           </Link>
           
-          {isLoggedIn && (
+          {isLoggedIn && user && (
             <>
               <span className="text-slate-300">|</span>
-              <span className="font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-md text-sm tracking-wide">
-                Customer Portal
+              <span className="font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-md text-sm tracking-wide capitalize">
+                {user.role ? `${user.role.toLowerCase()} Portal` : "Customer Portal"}
               </span>
             </>
           )}
@@ -62,26 +62,31 @@ export function UnifiedNavbar() {
             Gears
           </Link>
 
-          <Link href={isLoggedIn || isDashboard ? "/dashboard/customer" : "/auth/login"} className={`hover:text-orange-500 transition-colors ${pathname === '/dashboard/customer' ? 'text-orange-500' : ''}`}>
+          <Link 
+            href={isLoggedIn || isDashboard ? (user?.role === 'PROVIDER' ? "/dashboard/provider" : user?.role === 'ADMIN' ? "/dashboard/admin" : "/dashboard/customer") : "/auth/login"} 
+            className={`hover:text-orange-500 transition-colors ${pathname?.startsWith('/dashboard') ? 'text-orange-500' : ''}`}
+          >
             Dashboard
           </Link>
           
           {/* Unified Action Cluster */}
           <div className="flex items-center gap-2 ml-2 pl-4 border-l border-slate-200">
-            {/* Trip Bag Button */}
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center justify-center p-2 text-slate-500 hover:text-orange-500 hover:bg-orange-50 rounded-full transition-all cursor-pointer group"
-              aria-label="Trip Bag"
-              title="Trip Bag"
-            >
-              <Backpack className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              {cartItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-sm ring-2 ring-white">
-                  {cartItems.length}
-                </span>
-              )}
-            </button>
+            {/* Trip Bag Button - Hidden for Providers/Admins */}
+            {(!user || user.role === 'CUSTOMER') && (
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative flex items-center justify-center p-2 text-slate-500 hover:text-orange-500 hover:bg-orange-50 rounded-full transition-all cursor-pointer group"
+                aria-label="Trip Bag"
+                title="Trip Bag"
+              >
+                <Backpack className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-sm ring-2 ring-white">
+                    {cartItems.length}
+                  </span>
+                )}
+              </button>
+            )}
 
             {/* User Profile & Logout */}
             {user && (
