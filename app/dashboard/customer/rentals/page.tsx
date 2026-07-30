@@ -121,7 +121,7 @@ export default function CustomerRentalsPage() {
               <TableHeader className="border-b border-slate-200 bg-white/80">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="h-11 text-xs font-semibold text-slate-500">
-                    Order ID
+                    Item
                   </TableHead>
                   <TableHead className="h-11 text-xs font-semibold text-slate-500">
                     Dates
@@ -145,11 +145,22 @@ export default function CustomerRentalsPage() {
                       index % 2 === 0 ? "bg-white/80" : "bg-slate-50/80"
                     }`}
                   >
-                    {/* Order ID */}
+                    {/* Item */}
                     <TableCell className="py-3 font-medium text-slate-700">
-                      <span className="rounded border border-slate-200 bg-white px-2 py-1 font-mono text-xs text-slate-600 shadow-sm">
-                        {rental.id.split("-")[0]}
-                      </span>
+                      <div className="flex flex-col gap-1">
+                        {rental.orderItems && rental.orderItems.length > 0 ? (
+                          rental.orderItems.map((item: any) => (
+                            <span key={item.id} className="text-sm font-semibold truncate max-w-[200px]" title={item.gearItem?.name}>
+                              {item.gearItem?.name || "Unknown Item"}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-sm font-semibold truncate max-w-[200px]">Unknown Item</span>
+                        )}
+                        <span className="text-xs text-slate-400 font-mono">
+                          ID: {rental.id.split("-")[0]}
+                        </span>
+                      </div>
                     </TableCell>
 
                     {/* Dates */}

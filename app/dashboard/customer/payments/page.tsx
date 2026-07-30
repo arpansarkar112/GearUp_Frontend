@@ -31,7 +31,8 @@ export default function CustomerPaymentsPage() {
     async function loadData() {
       try {
         const paymentsRes = await fetchMyPayments()
-        setPayments(paymentsRes.data || [])
+        const filteredPayments = (paymentsRes.data || []).filter((p: any) => p.status === "COMPLETED" || p.status === "FAILED")
+        setPayments(filteredPayments)
       } catch (error: any) {
         toast.add({
           type: "error",
