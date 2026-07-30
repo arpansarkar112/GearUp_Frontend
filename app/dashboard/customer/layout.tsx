@@ -19,11 +19,11 @@ export default function CustomerDashboardLayout({ children }: { children: ReactN
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <UnifiedNavbar />
 
       {/* Customer Sub-navigation */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+      <div className="bg-background border-b border-border sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 h-14 overflow-x-auto no-scrollbar">
             {navItems.map((item) => {
@@ -38,7 +38,7 @@ export default function CustomerDashboardLayout({ children }: { children: ReactN
                     "inline-flex items-center px-1 border-b-2 text-sm font-bold transition-colors whitespace-nowrap",
                     isActive
                       ? "border-orange-500 text-orange-600"
-                      : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
                   )}
                 >
                   <Icon className="mr-2 h-4 w-4" />

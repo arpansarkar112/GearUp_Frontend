@@ -161,18 +161,18 @@ export function GearModal({ isOpen, onClose, gearId, onSuccess }: GearModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-3xl p-0 overflow-hidden bg-white">
-        <DialogHeader className="p-6 pb-2 border-b border-slate-100">
-          <DialogTitle className="text-2xl font-bold tracking-tight text-slate-900">
+      <DialogContent className="sm:max-w-3xl p-0 overflow-hidden bg-background border-border">
+        <DialogHeader className="p-6 pb-2 border-b border-border">
+          <DialogTitle className="text-2xl font-bold tracking-tight text-foreground">
             {isEditing ? "Edit Gear" : "Add New Gear"}
           </DialogTitle>
-          <DialogDescription className="text-slate-500">
+          <DialogDescription className="text-muted-foreground">
             {isEditing ? "Update the details of your listing." : "List a new item for customers to rent."}
           </DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
-          <div className="flex h-64 items-center justify-center bg-slate-50/50">
+          <div className="flex h-64 items-center justify-center bg-muted/50">
             <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
           </div>
         ) : (
@@ -191,7 +191,7 @@ export function GearModal({ isOpen, onClose, gearId, onSuccess }: GearModalProps
                     <select
                       id="categoryId"
                       {...form.register("categoryId")}
-                      className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500"
                     >
                       <option value="" disabled>Select a category</option>
                       {categories.map((c) => (
@@ -213,7 +213,7 @@ export function GearModal({ isOpen, onClose, gearId, onSuccess }: GearModalProps
                     id="description" 
                     {...form.register("description")}
                     rows={4}
-                    className="flex w-full rounded-md border border-slate-200 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="Describe your item's features, condition, and any rules for renters..."
                   />
                   {form.formState.errors.description && <p className="text-sm text-red-500">{form.formState.errors.description.message}</p>}
@@ -224,9 +224,9 @@ export function GearModal({ isOpen, onClose, gearId, onSuccess }: GearModalProps
                     type="checkbox" 
                     id="isAvailable" 
                     {...form.register("isAvailable")} 
-                    className="h-5 w-5 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
+                    className="h-5 w-5 rounded border-input bg-background text-orange-600 focus:ring-orange-500"
                   />
-                  <Label htmlFor="isAvailable" className="font-medium text-slate-700 cursor-pointer">Available for rent immediately</Label>
+                  <Label htmlFor="isAvailable" className="font-medium text-foreground cursor-pointer">Available for rent immediately</Label>
                 </div>
               </div>
 
@@ -239,15 +239,15 @@ export function GearModal({ isOpen, onClose, gearId, onSuccess }: GearModalProps
 
                 <div className="space-y-2">
                   <Label>Image Preview</Label>
-                  <div className="aspect-[4/3] rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center overflow-hidden">
+                  <div className="aspect-[4/3] rounded-lg border-2 border-dashed border-border bg-muted flex items-center justify-center overflow-hidden">
                     {imageUrl && !form.formState.errors.imageUrl ? (
                       <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" onError={(e) => {
                         (e.target as HTMLImageElement).src = "";
                         (e.target as HTMLImageElement).alt = "Invalid image URL";
                       }} />
                     ) : (
-                      <div className="text-center text-slate-500">
-                        <ImageIcon className="h-10 w-10 mx-auto text-slate-300 mb-2" />
+                      <div className="text-center text-muted-foreground">
+                        <ImageIcon className="h-10 w-10 mx-auto text-muted-foreground/50 mb-2" />
                         <p className="text-sm">Paste a valid URL above to preview</p>
                       </div>
                     )}
@@ -256,8 +256,8 @@ export function GearModal({ isOpen, onClose, gearId, onSuccess }: GearModalProps
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-100 flex justify-end gap-4 bg-white">
-              <Button type="button" variant="outline" onClick={onClose} className="border-slate-300 hover:bg-slate-50">Cancel</Button>
+            <div className="pt-6 border-t border-border flex justify-end gap-4 bg-background">
+              <Button type="button" variant="outline" onClick={onClose} className="border-input hover:bg-muted text-foreground">Cancel</Button>
               <Button type="submit" disabled={isSubmitting} className="bg-orange-600 hover:bg-orange-700 text-white min-w-[120px] shadow-sm">
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                 {isSubmitting ? (isEditing ? "Updating..." : "Listing...") : (isEditing ? "Save Changes" : "List Gear")}

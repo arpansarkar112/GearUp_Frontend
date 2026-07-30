@@ -61,7 +61,7 @@ export default function ProviderGearPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Inventory Management</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Inventory Management</h1>
           <p className="text-slate-500 mt-2">Manage your gear listings, pricing, and availability.</p>
         </div>
         <Button 
@@ -85,13 +85,13 @@ export default function ProviderGearPage() {
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-orange-500"></div>
         </div>
       ) : gear.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 bg-white border border-slate-200 border-dashed rounded-lg">
-          <PackageOpen className="h-12 w-12 text-slate-300 mb-4" />
-          <h3 className="text-lg font-medium text-slate-900">No gear listed yet</h3>
-          <p className="text-slate-500 mb-4">Start earning by listing your first item.</p>
+        <div className="flex flex-col items-center justify-center h-64 bg-card border border-border border-dashed rounded-lg">
+          <PackageOpen className="h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium text-foreground">No gear listed yet</h3>
+          <p className="text-muted-foreground mb-4">Start earning by listing your first item.</p>
           <Button 
             variant="outline" 
-            className="border-orange-200 text-orange-600 hover:bg-orange-50"
+            className="border-orange-500/20 text-orange-500 hover:bg-orange-500/10"
             onClick={() => { setEditingGearId(null); setIsModalOpen(true); }}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -101,11 +101,11 @@ export default function ProviderGearPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {gear.map((item) => (
-            <div key={item.id} className="group relative bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-[4/3] bg-slate-100 overflow-hidden relative">
+            <div key={item.id} className="group relative bg-card border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+              <div className="aspect-[4/3] bg-muted overflow-hidden relative">
                 <img src={item.imageUrl || item.image || "https://images.unsplash.com/photo-1521336575822-6da63fb45455?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGFkdmVudHVyZXxlbnwwfHwwfHx8MA%3D%3D"} alt={item.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                 <div className="absolute top-3 right-3 flex gap-2">
-                  <Badge className={item.isAvailable ? "bg-green-100 text-green-700 hover:bg-green-100" : "bg-slate-100 text-slate-700 hover:bg-slate-100"}>
+                  <Badge className={item.isAvailable ? "bg-green-100 text-green-700 hover:bg-green-100" : "bg-muted text-muted-foreground hover:bg-muted"}>
                     {item.isAvailable ? "Available" : "Unavailable"}
                   </Badge>
                 </div>
@@ -113,8 +113,8 @@ export default function ProviderGearPage() {
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h3 className="font-semibold text-slate-900 truncate">{item.name}</h3>
-                    <p className="text-sm text-slate-500">{item.category?.name || item.category}</p>
+                    <h3 className="font-semibold text-foreground truncate">{item.name}</h3>
+                    <p className="text-sm text-muted-foreground">{item.category?.name || item.category}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button 
@@ -137,7 +137,7 @@ export default function ProviderGearPage() {
                   </div>
                 </div>
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="font-bold text-lg text-slate-900">${item.pricePerDay || item.price}<span className="text-sm font-normal text-slate-500">/day</span></span>
+                  <span className="font-bold text-lg text-foreground">${item.pricePerDay || item.price}<span className="text-sm font-normal text-muted-foreground">/day</span></span>
                 </div>
               </div>
             </div>

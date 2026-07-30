@@ -64,7 +64,7 @@ export default function CustomerReviewsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="flex items-center gap-2 text-3xl font-black tracking-tight text-slate-900">
+        <h2 className="flex items-center gap-2 text-3xl font-black tracking-tight text-foreground">
           <Star className="h-7 w-7 text-orange-500 fill-orange-500" /> My Reviews
         </h2>
         <p className="mt-2 text-slate-500">
@@ -80,19 +80,19 @@ export default function CustomerReviewsPage() {
       )}
 
       {/* Reviews List */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
         {reviews.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="mx-auto h-12 w-12 text-slate-300 mb-4">
+            <div className="mx-auto h-12 w-12 text-muted-foreground mb-4">
               <MessageSquare className="h-full w-full" />
             </div>
-            <h3 className="text-lg font-medium text-slate-900">No reviews yet</h3>
-            <p className="text-slate-500 mt-2">You haven't left any reviews for your rentals. Return a gear to leave your first review!</p>
+            <h3 className="text-lg font-medium text-foreground">No reviews yet</h3>
+            <p className="text-muted-foreground mt-2">You haven't left any reviews for your rentals. Return a gear to leave your first review!</p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border">
             {reviews.map((review) => (
-              <div key={review.id} className="p-6 hover:bg-slate-50/50 transition-colors">
+              <div key={review.id} className="p-6 hover:bg-muted/50 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                   
                   {/* Left Column: Customer & Rating */}
@@ -102,25 +102,25 @@ export default function CustomerReviewsPage() {
                         {userProfile?.name?.charAt(0).toUpperCase() || "C"}
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-900">{userProfile?.name || "Customer"}</p>
-                        <p className="text-xs text-slate-400">{format(new Date(review.createdAt), "MMMM d, yyyy")}</p>
+                        <p className="font-semibold text-foreground">{userProfile?.name || "Customer"}</p>
+                        <p className="text-xs text-muted-foreground">{format(new Date(review.createdAt), "MMMM d, yyyy")}</p>
                       </div>
                     </div>
                     {renderStars(review.rating)}
                   </div>
 
                   {/* Right Column: Gear Reference */}
-                  <div className="shrink-0 bg-slate-100 rounded-lg p-3 flex items-start space-x-3 sm:w-64">
-                    <PackageOpen className="h-5 w-5 text-slate-400 mt-0.5 shrink-0" />
+                  <div className="shrink-0 bg-muted rounded-lg p-3 flex items-start space-x-3 sm:w-64">
+                    <PackageOpen className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900 leading-tight">{review.gearItem?.name || "Outdoor Gear"}</p>
-                      <p className="text-xs text-slate-500 mt-1">${review.gearItem?.price || 0}/day</p>
+                      <p className="text-sm font-medium text-foreground leading-tight">{review.gearItem?.name || "Outdoor Gear"}</p>
+                      <p className="text-xs text-muted-foreground mt-1">${review.gearItem?.price || 0}/day</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-slate-700 whitespace-pre-wrap">{review.comment || <span className="text-slate-400 italic">No comment provided.</span>}</p>
+                  <p className="text-foreground whitespace-pre-wrap">{review.comment || <span className="text-muted-foreground italic">No comment provided.</span>}</p>
                 </div>
               </div>
             ))}

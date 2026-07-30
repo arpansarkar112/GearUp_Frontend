@@ -27,23 +27,23 @@ export default async function CategoriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <UnifiedNavbar />
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-6 lg:p-8 space-y-12">
         <div className="text-center sm:text-left space-y-4">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground">
             Explore Categories
           </h1>
-          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl font-medium">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl font-medium">
             Find the perfect equipment for your specific outdoor adventure. From rugged mountains to serene lakes.
           </p>
         </div>
 
         {categories.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-slate-200">
-            <h3 className="text-xl font-bold text-slate-700">No categories found.</h3>
-            <p className="text-slate-500 mt-2">Please check back later.</p>
+          <div className="text-center py-20 bg-card rounded-3xl shadow-sm border border-border">
+            <h3 className="text-xl font-bold text-foreground">No categories found.</h3>
+            <p className="text-muted-foreground mt-2">Please check back later.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">

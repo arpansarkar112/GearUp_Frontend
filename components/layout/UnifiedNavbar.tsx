@@ -9,6 +9,7 @@ import { LogOut, Backpack } from "lucide-react";
 import { fetchMyProfile } from "@/lib/api/user";
 import { useCartStore } from "@/lib/store/cartStore";
 import { CartDrawer } from "@/components/layout/CartDrawer";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function UnifiedNavbar() {
   const pathname = usePathname();
@@ -33,7 +34,7 @@ export function UnifiedNavbar() {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+    <header className="bg-background shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Logo & Branding */}
@@ -44,8 +45,8 @@ export function UnifiedNavbar() {
           
           {isLoggedIn && user && (
             <>
-              <span className="text-slate-300">|</span>
-              <span className="font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-md text-sm tracking-wide capitalize">
+              <span className="text-muted-foreground">|</span>
+              <span className="font-bold text-foreground bg-muted px-3 py-1 rounded-md text-sm tracking-wide capitalize">
                 {user.role ? `${user.role.toLowerCase()} Portal` : "Customer Portal"}
               </span>
             </>
@@ -70,7 +71,8 @@ export function UnifiedNavbar() {
           </Link>
           
           {/* Unified Action Cluster */}
-          <div className="flex items-center gap-2 ml-2 pl-4 border-l border-slate-200">
+          <div className="flex items-center gap-2 ml-2 pl-4 border-l border-border">
+            <ThemeToggle />
             {/* Trip Bag Button - Only for Customers */}
             {user && user.role === 'CUSTOMER' && (
               <button 

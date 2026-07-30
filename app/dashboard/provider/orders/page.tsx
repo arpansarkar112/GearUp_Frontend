@@ -153,7 +153,7 @@ export default function ProviderOrdersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Order Management</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Order Management</h1>
         <p className="text-slate-500 mt-2">View and update the status of incoming gear rentals.</p>
       </div>
 
@@ -169,43 +169,43 @@ export default function ProviderOrdersPage() {
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-orange-500"></div>
         </div>
       ) : orders.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-xl p-12 text-center">
-          <h3 className="text-lg font-medium text-slate-900">No orders yet</h3>
-          <p className="text-slate-500 mt-2">When customers rent your gear, they will appear here.</p>
+        <div className="bg-card border border-border rounded-xl p-12 text-center">
+          <h3 className="text-lg font-medium text-foreground">No orders yet</h3>
+          <p className="text-muted-foreground mt-2">When customers rent your gear, they will appear here.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-slate-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
-                  <TableHead className="font-semibold text-slate-900">Item</TableHead>
-                  <TableHead className="font-semibold text-slate-900">Customer</TableHead>
-                  <TableHead className="font-semibold text-slate-900">Dates</TableHead>
-                  <TableHead className="font-semibold text-slate-900 text-right">Total</TableHead>
-                  <TableHead className="font-semibold text-slate-900 text-center">Status</TableHead>
-                  <TableHead className="font-semibold text-slate-900 text-center">Payment</TableHead>
-                  <TableHead className="font-semibold text-slate-900 text-center">Action</TableHead>
+                  <TableHead className="font-semibold text-foreground">Item</TableHead>
+                  <TableHead className="font-semibold text-foreground">Customer</TableHead>
+                  <TableHead className="font-semibold text-foreground">Dates</TableHead>
+                  <TableHead className="font-semibold text-foreground text-right">Total</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Status</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Payment</TableHead>
+                  <TableHead className="font-semibold text-foreground text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {orders.map((order) => (
-                  <TableRow key={order.id} className="hover:bg-slate-50/50 transition-colors">
-                    <TableCell className="font-medium text-slate-900 max-w-[200px]">
+                  <TableRow key={order.id} className="hover:bg-muted/50 transition-colors">
+                    <TableCell className="font-medium text-foreground max-w-[200px]">
                       <div className="truncate" title={order.orderItems?.map(item => item.gearItem?.name).join(", ")}>
                         {order.orderItems?.map(item => item.gearItem?.name).join(", ") || "Unknown Item"}
                       </div>
-                      <div className="text-xs font-normal text-slate-400 mt-0.5">ID: {order.id?.slice(-6) || "N/A"}</div>
+                      <div className="text-xs font-normal text-muted-foreground mt-0.5">ID: {order.id?.slice(-6) || "N/A"}</div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm font-medium text-slate-900">{order.customer?.name || "Unknown"}</div>
-                      <div className="text-xs text-slate-500">{order.customer?.email}</div>
+                      <div className="text-sm font-medium text-foreground">{order.customer?.name || "Unknown"}</div>
+                      <div className="text-xs text-muted-foreground">{order.customer?.email}</div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm text-slate-700">{format(new Date(order.startDate), "MMM d, yyyy")}</div>
-                      <div className="text-xs text-slate-500">to {format(new Date(order.endDate), "MMM d, yyyy")}</div>
+                      <div className="text-sm text-foreground">{format(new Date(order.startDate), "MMM d, yyyy")}</div>
+                      <div className="text-xs text-muted-foreground">to {format(new Date(order.endDate), "MMM d, yyyy")}</div>
                     </TableCell>
-                    <TableCell className="text-right font-semibold text-slate-900">
+                    <TableCell className="text-right font-semibold text-foreground">
                       ${order.totalAmount || order.totalPrice}
                     </TableCell>
                     <TableCell className="text-center">

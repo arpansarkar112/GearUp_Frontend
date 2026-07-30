@@ -78,41 +78,41 @@ export default function ProviderReviewsPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex items-center space-x-4">
-          <div className="h-12 w-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
+        <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex items-center space-x-4">
+          <div className="h-12 w-12 bg-orange-500/10 text-orange-600 rounded-full flex items-center justify-center">
             <Star className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Average Rating</p>
-            <p className="text-2xl font-bold text-slate-900">{calculateAverageRating()} <span className="text-sm font-normal text-slate-500">/ 5.0</span></p>
+            <p className="text-sm font-medium text-muted-foreground">Average Rating</p>
+            <p className="text-2xl font-bold text-foreground">{calculateAverageRating()} <span className="text-sm font-normal text-muted-foreground">/ 5.0</span></p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex items-center space-x-4">
-          <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+        <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex items-center space-x-4">
+          <div className="h-12 w-12 bg-blue-500/10 text-blue-600 rounded-full flex items-center justify-center">
             <MessageSquare className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-500">Total Reviews</p>
-            <p className="text-2xl font-bold text-slate-900">{reviews.length}</p>
+            <p className="text-sm font-medium text-muted-foreground">Total Reviews</p>
+            <p className="text-2xl font-bold text-foreground">{reviews.length}</p>
           </div>
         </div>
       </div>
 
       {/* Reviews List */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
         {reviews.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="mx-auto h-12 w-12 text-slate-300 mb-4">
+            <div className="mx-auto h-12 w-12 text-muted-foreground mb-4">
               <MessageSquare className="h-full w-full" />
             </div>
-            <h3 className="text-lg font-medium text-slate-900">No reviews yet</h3>
-            <p className="text-slate-500 mt-2">When customers review your gear, their feedback will appear here.</p>
+            <h3 className="text-lg font-medium text-foreground">No reviews yet</h3>
+            <p className="text-muted-foreground mt-2">When customers review your gear, their feedback will appear here.</p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border">
             {reviews.map((review) => (
-              <div key={review.id} className="p-6 hover:bg-slate-50/50 transition-colors">
+              <div key={review.id} className="p-6 hover:bg-muted/50 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                   
                   {/* Left Column: Customer & Rating */}
@@ -122,25 +122,25 @@ export default function ProviderReviewsPage() {
                         {review.customer.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-900">{review.customer.name}</p>
-                        <p className="text-xs text-slate-400">{format(new Date(review.createdAt), "MMMM d, yyyy")}</p>
+                        <p className="font-semibold text-foreground">{review.customer.name}</p>
+                        <p className="text-xs text-muted-foreground">{format(new Date(review.createdAt), "MMMM d, yyyy")}</p>
                       </div>
                     </div>
                     {renderStars(review.rating)}
                   </div>
 
                   {/* Right Column: Gear Reference */}
-                  <div className="shrink-0 bg-slate-100 rounded-lg p-3 flex items-start space-x-3 sm:w-64">
-                    <PackageOpen className="h-5 w-5 text-slate-400 mt-0.5 shrink-0" />
+                  <div className="shrink-0 bg-muted rounded-lg p-3 flex items-start space-x-3 sm:w-64">
+                    <PackageOpen className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900 leading-tight">{review.gearItem.name}</p>
-                      <p className="text-xs text-slate-500 mt-1">${review.gearItem.price}/day</p>
+                      <p className="text-sm font-medium text-foreground leading-tight">{review.gearItem.name}</p>
+                      <p className="text-xs text-muted-foreground mt-1">${review.gearItem.price}/day</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-slate-700 whitespace-pre-wrap">{review.comment || <span className="text-slate-400 italic">No comment provided.</span>}</p>
+                  <p className="text-foreground whitespace-pre-wrap">{review.comment || <span className="text-muted-foreground italic">No comment provided.</span>}</p>
                 </div>
               </div>
             ))}

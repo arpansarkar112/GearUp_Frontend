@@ -79,7 +79,7 @@ export function ReviewModal({ gearItemIds }: { gearItemIds: string[] }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={<Button size="sm" variant="secondary" className="bg-slate-200 hover:bg-slate-300 text-slate-800 font-medium" />}>
+      <DialogTrigger render={<Button size="sm" variant="secondary" className="font-medium" />}>
         Leave Review
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

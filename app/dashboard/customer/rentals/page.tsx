@@ -77,7 +77,7 @@ export default function CustomerRentalsPage() {
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h2 className="flex items-center gap-2 text-2xl font-black tracking-tight text-slate-900">
+          <h2 className="flex items-center gap-2 text-2xl font-black tracking-tight text-foreground">
             <ReceiptText className="h-6 w-6 text-orange-500" /> My Rental History
           </h2>
           <p className="mt-1 text-sm text-slate-500">
@@ -86,7 +86,7 @@ export default function CustomerRentalsPage() {
         </div>
       </div>
 
-      <Card className="overflow-hidden border border-slate-200 bg-white/60 shadow-sm backdrop-blur-xl">
+      <Card className="overflow-hidden border border-border bg-card shadow-sm backdrop-blur-xl">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center space-y-4 p-10 text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-orange-500" />
@@ -96,14 +96,14 @@ export default function CustomerRentalsPage() {
           </div>
         ) : rentals.length === 0 ? (
           <div className="flex flex-col items-center justify-center space-y-5 p-16 text-center">
-            <div className="rounded-full border border-slate-100 bg-white p-5 shadow-sm">
-              <Package className="h-10 w-10 text-slate-300" />
+            <div className="rounded-full border border-border bg-background p-5 shadow-sm">
+              <Package className="h-10 w-10 text-muted-foreground" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-slate-800">
+              <h3 className="text-xl font-bold text-foreground">
                 No Rentals Found
               </h3>
-              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-slate-500">
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
                 You haven't rented any gear yet. Check out our catalog to
                 start your first adventure!
               </p>
@@ -118,21 +118,21 @@ export default function CustomerRentalsPage() {
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="border-b border-slate-200 bg-white/80">
+              <TableHeader className="border-b border-border bg-muted/50">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="h-11 text-xs font-semibold text-slate-500">
+                  <TableHead className="h-11 text-xs font-semibold text-muted-foreground">
                     Item
                   </TableHead>
-                  <TableHead className="h-11 text-xs font-semibold text-slate-500">
+                  <TableHead className="h-11 text-xs font-semibold text-muted-foreground">
                     Dates
                   </TableHead>
-                  <TableHead className="h-11 text-xs font-semibold text-slate-500">
+                  <TableHead className="h-11 text-xs font-semibold text-muted-foreground">
                     Total Price
                   </TableHead>
-                  <TableHead className="h-11 text-xs font-semibold text-slate-500">
+                  <TableHead className="h-11 text-xs font-semibold text-muted-foreground">
                     Status
                   </TableHead>
-                  <TableHead className="h-11 text-right text-xs font-semibold text-slate-500">
+                  <TableHead className="h-11 text-right text-xs font-semibold text-muted-foreground">
                     Action
                   </TableHead>
                 </TableRow>
@@ -141,12 +141,12 @@ export default function CustomerRentalsPage() {
                 {rentals.map((rental, index) => (
                   <TableRow
                     key={rental.id}
-                    className={`border-b border-slate-100 transition-colors hover:bg-slate-100/50 ${
-                      index % 2 === 0 ? "bg-white/80" : "bg-slate-50/80"
+                    className={`border-b border-border transition-colors hover:bg-muted/50 ${
+                      index % 2 === 0 ? "bg-background" : "bg-muted/20"
                     }`}
                   >
                     {/* Item */}
-                    <TableCell className="py-3 font-medium text-slate-700">
+                    <TableCell className="py-3 font-medium text-foreground">
                       <div className="flex flex-col gap-1">
                         {rental.orderItems && rental.orderItems.length > 0 ? (
                           rental.orderItems.map((item: any) => (
@@ -157,20 +157,20 @@ export default function CustomerRentalsPage() {
                         ) : (
                           <span className="text-sm font-semibold truncate max-w-[200px]">Unknown Item</span>
                         )}
-                        <span className="text-xs text-slate-400 font-mono">
+                        <span className="text-xs text-muted-foreground font-mono">
                           ID: {rental.id.split("-")[0]}
                         </span>
                       </div>
                     </TableCell>
 
                     {/* Dates */}
-                    <TableCell className="py-3 text-sm whitespace-nowrap text-slate-600">
+                    <TableCell className="py-3 text-sm whitespace-nowrap text-muted-foreground">
                       {format(new Date(rental.startDate), "MMM d")} -{" "}
                       {format(new Date(rental.endDate), "MMM d, yyyy")}
                     </TableCell>
 
                     {/* Price */}
-                    <TableCell className="py-3 font-bold text-slate-800">
+                    <TableCell className="py-3 font-bold text-foreground">
                       ${rental.totalAmount.toFixed(2)}
                     </TableCell>
 
@@ -211,7 +211,7 @@ export default function CustomerRentalsPage() {
                           } 
                         />
                       ) : (
-                        <span className="text-xs font-medium text-slate-400 italic">No action needed</span>
+                        <span className="text-xs font-medium text-muted-foreground italic">No action needed</span>
                       )}
                     </TableCell>
                   </TableRow>
