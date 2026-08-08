@@ -13,10 +13,20 @@ import { Loader2, UserCog } from "lucide-react";
 interface EditProfileModalProps {
   user: any;
   onSuccess?: () => void;
+  children?: React.ReactElement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function EditProfileModal({ user, onSuccess }: EditProfileModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function EditProfileModal({ user, onSuccess, children, open, onOpenChange }: EditProfileModalProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isOpen = open !== undefined ? open : internalIsOpen;
+  
+  const handleOpenChange = (v: boolean) => {
+    setInternalIsOpen(v);
+    if (onOpenChange) onOpenChange(v);
+  };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   
@@ -48,10 +58,16 @@ export function EditProfileModal({ user, onSuccess }: EditProfileModalProps) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={<Button variant="ghost" size="icon-sm" className="text-slate-500 hover:text-orange-500 hover:bg-orange-50 rounded-full h-9 w-9 flex-shrink-0" title="Edit Profile" aria-label="Edit Profile" />}>
-        <UserCog className="w-4 h-4" />
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {!open && (
+        <DialogTrigger nativeButton={!children} render={
+          children || (
+            <Button variant="ghost" size="icon-sm" className="text-slate-500 hover:text-orange-500 hover:bg-orange-50 rounded-full h-9 w-9 flex-shrink-0" title="Edit Profile" aria-label="Edit Profile">
+              <UserCog className="w-4 h-4" />
+            </Button>
+          )
+        } />
+      )}
       
       <DialogContent className="sm:max-w-[425px] rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8">
         <DialogHeader className="mb-2 text-left">

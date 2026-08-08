@@ -38,7 +38,7 @@ export function RoleProtectedRoute({ children, allowedRoles }: RoleProtectedRout
             title: "Access Denied",
             description: "You do not have permission to view this page.",
           });
-          // Redirect based on their actual role
+
           if (role === "PROVIDER") router.push("/dashboard/provider");
           else if (role === "ADMIN") router.push("/dashboard/admin");
           else router.push("/dashboard/customer");
@@ -46,7 +46,7 @@ export function RoleProtectedRoute({ children, allowedRoles }: RoleProtectedRout
           setIsAuthorized(true);
         }
       } catch (err) {
-        // If profile fetch fails, token might be invalid or expired
+  
         localStorage.removeItem("token");
         router.push("/auth/login");
       }

@@ -6,7 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
-import { Loader2, ShieldCheck, UserX, UserCheck, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Loader2, ShieldCheck, UserX, UserCheck, AlertCircle, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 
 export default function AdminUsersPage() {
@@ -14,6 +15,9 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const loadUsers = async () => {
     try {
@@ -58,6 +62,14 @@ export default function AdminUsersPage() {
     );
   }
 
+  const filteredUsers = users.filter(user => 
+    user.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div className="space-y-6">
       <div>
@@ -72,8 +84,21 @@ export default function AdminUsersPage() {
         </div>
       )}
 
+      <div className="flex items-center space-x-2 bg-card p-2 rounded-xl border border-border shadow-sm mb-4 w-full max-w-sm">
+        <Search className="h-5 w-5 text-muted-foreground ml-2" />
+        <Input 
+          placeholder="Search by name or email..." 
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="border-none shadow-none focus-visible:ring-0"
+        />
+      </div>
+
       <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
-        {users.length === 0 ? (
+        {paginatedUsers.length === 0 ? (
           <div className="p-12 text-center text-muted-foreground">
             No users found.
           </div>
@@ -91,7 +116,7 @@ export default function AdminUsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map((user) => (
+                {paginatedUsers.map((user) => (
                   <TableRow key={user.id} className="border-border hover:bg-muted/50 transition-colors">
                     <TableCell className="font-medium text-foreground">{user.name}</TableCell>
                     <TableCell className="text-muted-foreground">{user.email}</TableCell>
@@ -147,6 +172,32 @@ export default function AdminUsersPage() {
           </div>
         )}
       </div>
+      
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4">
+          <p className="text-sm text-muted-foreground">
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} users
+          </p>
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

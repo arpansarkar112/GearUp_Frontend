@@ -5,6 +5,9 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ShieldCheck, Zap, HandCoins, ArrowRight } from "lucide-react";
+import { HowItWorksSection, StatsSection, CategoriesPreviewSection, TestimonialsSection, FAQSection, CTASection, NewsletterSection } from "@/components/pages/home/HomeSections";
+import { HomeNavbar } from "@/components/pages/home/HomeNavbar";
+import { fetchAllCategories, fetchAllReviews } from "@/lib/api/gear";
 
 interface Gear {
   id: string;
@@ -44,28 +47,60 @@ async function getGear(): Promise<Gear[]> {
 }
 
 export default async function HomePage() {
-  const gearList = await getGear();
+  const [gearList, categoriesRes, reviewsRes] = await Promise.all([
+    getGear(),
+    fetchAllCategories().catch(() => ({ data: [] })),
+    fetchAllReviews().catch(() => ({ data: [] }))
+  ]);
   const featuredGear = gearList.slice(0, 8);
+  const realCategories = categoriesRes.data || categoriesRes || [];
+  const rawReviews = reviewsRes.data || reviewsRes || [];
+
+  // Match reviews with gear items to extract the real gear name
+  let realReviews: any[] = [];
+
+  if (Array.isArray(rawReviews) && rawReviews.length > 0) {
+    realReviews = rawReviews.map((r: any) => {
+      const matchedGear = gearList.find((g: any) => g.id === r.gearItemId || g.id === r.gearId || g.id === r.gear?.id);
+      return {
+        ...r,
+        gearName: r.gearItem?.name || r.gear?.name || matchedGear?.name || "Outdoor Equipment"
+      };
+    });
+  }
+
+  // Fallback to reviews attached directly to items in gearList if rawReviews is empty
+  if (realReviews.length === 0) {
+    gearList.forEach((gearItem) => {
+      if (gearItem.reviews && Array.isArray(gearItem.reviews)) {
+        gearItem.reviews.forEach((r: any) => {
+          realReviews.push({
+            ...r,
+            gearName: gearItem.name
+          });
+        });
+      }
+    });
+  }
+
+  const gearCount = gearList.length;
+  const categoryCount = Array.isArray(realCategories) ? realCategories.length : 0;
+  const reviewsFromGear = gearList.reduce((acc, item) => acc + (item.reviews?.length || 0), 0);
+  const reviewCount = (Array.isArray(realReviews) && realReviews.length > 0) ? realReviews.length : reviewsFromGear;
+  const uniqueBrands = new Set(gearList.map(g => g.brand).filter(Boolean));
+  const brandCount = uniqueBrands.size;
+
+  const statsData = {
+    gearCount,
+    categoryCount,
+    reviewCount,
+    brandCount
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       {/* CUSTOM HOMEPAGE NAVBAR */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-          <Link href="/" className="text-3xl font-black text-orange-500 tracking-tight">
-            GearUp
-          </Link>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <Link href="/auth/login" className="text-sm font-bold text-foreground hover:text-orange-500 transition-colors">
-              Log In
-            </Link>
-            <Button asChild className="rounded-full bg-foreground text-background hover:bg-foreground/90 font-bold px-6">
-              <Link href="/auth/register">Sign Up</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <HomeNavbar />
 
       <main className="flex-grow">
         {/* HERO SECTION */}
@@ -204,6 +239,14 @@ export default async function HomePage() {
             </div>
           )}
         </section>
+
+        <HowItWorksSection />
+        <CategoriesPreviewSection categories={realCategories} />
+        <StatsSection stats={statsData} />
+        <TestimonialsSection reviews={realReviews} />
+        <FAQSection />
+        <NewsletterSection />
+        <CTASection />
 
       </main>
     </div>

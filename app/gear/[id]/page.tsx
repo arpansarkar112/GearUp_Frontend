@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { fetchGearById, fetchReviewsByGearId } from "@/lib/api/gear";
+import { fetchGearById, fetchReviewsByGearId, fetchAllGear } from "@/lib/api/gear";
 import { fetchMyProfile } from "@/lib/api/user";
 import { toast } from "@/components/ui/toast";
 import { ArrowLeft, Loader2, CheckCircle, ShieldAlert, Star, Backpack } from "lucide-react";
@@ -23,6 +23,7 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
   const { addToCart } = useCartStore();
   const [gear, setGear] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [relatedItems, setRelatedItems] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -37,8 +38,23 @@ export default function GearDetailsPage({ params }: { params: Promise<{ id: stri
           fetchGearById(unwrappedParams.id),
           fetchReviewsByGearId(unwrappedParams.id).catch(() => ({ data: [] }))
         ]);
-        setGear(gearRes.data);
+        const gearData = gearRes.data;
+        setGear(gearData);
         setReviews(reviewsRes.data || []);
+        
+        try {
+          const allGearRes = await fetchAllGear();
+          if (allGearRes.data) {
+             const catName = typeof gearData.category === 'object' ? gearData.category?.name : gearData.category;
+             const related = allGearRes.data.filter((item: any) => 
+               item.id !== gearData.id && 
+               (typeof item.category === 'object' ? item.category?.name : item.category) === catName
+             ).slice(0, 4);
+             setRelatedItems(related);
+          }
+        } catch (e) {
+          console.error(e);
+        }
       } catch (error) {
         toast.add({
           type: "error",
@@ -175,6 +191,28 @@ return (
                 {gear.description}
               </p>
               
+              <div className="mt-8 mb-8 border-t border-border pt-8">
+                <h3 className="text-xl font-bold text-foreground mb-4">Key Information / Specifications</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col bg-muted/50 p-3 rounded-lg">
+                    <span className="text-sm text-muted-foreground font-medium">Brand</span>
+                    <span className="font-semibold text-foreground">{gear.brand || "Unspecified"}</span>
+                  </div>
+                  <div className="flex flex-col bg-muted/50 p-3 rounded-lg">
+                    <span className="text-sm text-muted-foreground font-medium">Category</span>
+                    <span className="font-semibold text-foreground">{typeof gear.category === 'object' ? gear.category?.name : "Gear"}</span>
+                  </div>
+                  <div className="flex flex-col bg-muted/50 p-3 rounded-lg">
+                    <span className="text-sm text-muted-foreground font-medium">Stock</span>
+                    <span className="font-semibold text-foreground">{gear.stock || 1} available</span>
+                  </div>
+                  <div className="flex flex-col bg-muted/50 p-3 rounded-lg">
+                    <span className="text-sm text-muted-foreground font-medium">Condition</span>
+                    <span className="font-semibold text-foreground">Excellent</span>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted p-4 rounded-xl">
                 <ShieldAlert className="w-5 h-5 text-muted-foreground" />
                 <span>A refundable deposit will be required upon pickup.</span>
@@ -263,6 +301,41 @@ return (
             </div>
           )}
         </div>
+
+        {/* Related Items Section */}
+        {relatedItems.length > 0 && (
+          <div className="mt-16 pt-16 border-t border-border">
+            <h2 className="text-3xl font-black text-foreground mb-8">You Might Also Like</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedItems.map((item) => {
+                 const catName = typeof item.category === 'object' ? item.category?.name : item.category;
+                 return (
+                   <Link key={item.id} href={`/gear/${item.id}`} className="group block h-full">
+                     <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-all hover:-translate-y-1 bg-card flex flex-col h-full cursor-pointer">
+                       <div className="aspect-[4/3] bg-muted relative group overflow-hidden">
+                         <Image 
+                           src={item.imageUrl || item.image || "https://images.unsplash.com/photo-1496150590317-f8d952453f93?w=600&auto=format&fit=crop&q=60"} 
+                           alt={item.name}
+                           fill
+                           className="object-cover transition-transform duration-300 group-hover:scale-105"
+                         />
+                         <div className="absolute top-3 right-3 flex gap-2 flex-wrap justify-end">
+                           <Badge variant="secondary" className="bg-background/90 text-foreground backdrop-blur-sm shadow-sm font-bold border-none">
+                             ${item.price}/day
+                           </Badge>
+                         </div>
+                       </div>
+                       <CardContent className="p-4 pt-4">
+                         <div className="text-xs font-bold text-orange-500 uppercase tracking-wider mb-1">{catName || "Gear"}</div>
+                         <h3 className="font-bold text-base text-foreground leading-tight line-clamp-1 group-hover:text-orange-500 transition-colors">{item.name}</h3>
+                       </CardContent>
+                     </Card>
+                   </Link>
+                 );
+              })}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
