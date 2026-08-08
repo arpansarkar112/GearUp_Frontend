@@ -54,7 +54,7 @@ export default function AdminOverviewPage() {
 
         // Generate dynamic chart data for the last 6 months
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const last6Months = [];
+        const last6Months: { monthIndex: number; year: number; name: string; newUsers: number; newOrders: number }[] = [];
         for (let i = 5; i >= 0; i--) {
           const d = new Date();
           d.setMonth(d.getMonth() - i);
