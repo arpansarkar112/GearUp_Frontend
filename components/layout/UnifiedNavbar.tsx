@@ -50,6 +50,7 @@ export function UnifiedNavbar() {
   };
 
   return (
+    <>
     <header className="sticky top-0 z-50 bg-background/30 backdrop-blur-xl backdrop-saturate-150 border-b border-white/20 dark:border-white/10 shadow-lg">
       <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
         
@@ -173,19 +174,20 @@ export function UnifiedNavbar() {
             )}
           </div>
       </div>
-      <CartDrawer />
-      
-      {/* Edit Profile Modal Rendered Independently */}
-      {user && (
-        <EditProfileModal 
-          user={user} 
-          open={isEditProfileOpen} 
-          onOpenChange={setIsEditProfileOpen} 
-          onSuccess={() => fetchMyProfile().then(res => setUser(res.data)).catch(console.error)} 
-        >
-          <div className="hidden" />
-        </EditProfileModal>
-      )}
     </header>
+    <CartDrawer />
+      
+    {/* Edit Profile Modal Rendered Independently */}
+    {user && (
+      <EditProfileModal 
+        user={user} 
+        open={isEditProfileOpen} 
+        onOpenChange={setIsEditProfileOpen} 
+        onSuccess={() => fetchMyProfile().then(res => setUser(res.data)).catch(console.error)} 
+      >
+        <div className="hidden" />
+      </EditProfileModal>
+    )}
+    </>
   );
 }
