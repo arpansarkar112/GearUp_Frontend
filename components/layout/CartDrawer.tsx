@@ -138,7 +138,7 @@ export function CartDrawer() {
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {startDate ? format(startDate, "PPP") : "Pick start date"}
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 rounded-2xl border-border shadow-xl bg-card" align="start">
+                      <PopoverContent className="w-auto p-0 rounded-2xl border-border shadow-xl bg-card" align="start" style={{ zIndex: 9999 }}>
                         <Calendar
                           mode="single"
                           selected={startDate}
@@ -161,7 +161,7 @@ export function CartDrawer() {
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {endDate ? format(endDate, "PPP") : "Pick end date"}
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 rounded-2xl border-border shadow-xl bg-card" align="start">
+                      <PopoverContent className="w-auto p-0 rounded-2xl border-border shadow-xl bg-card" align="start" style={{ zIndex: 9999 }}>
                         <Calendar
                           mode="single"
                           selected={endDate}
