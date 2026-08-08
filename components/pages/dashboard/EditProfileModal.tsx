@@ -46,7 +46,7 @@ export function EditProfileModal({ user, onSuccess, children, open, onOpenChange
     try {
       await updateMyProfile(formData);
       toast.add({ type: "success", title: "Profile Updated", description: "Your profile has been updated successfully." });
-      setIsOpen(false);
+      handleOpenChange(false);
       if (onSuccess) onSuccess();
       
       window.dispatchEvent(new Event("profileUpdated"));
@@ -115,7 +115,7 @@ export function EditProfileModal({ user, onSuccess, children, open, onOpenChange
             <Button 
               type="button" 
               variant="ghost" 
-              onClick={() => setIsOpen(false)}
+              onClick={() => handleOpenChange(false)}
               className="rounded-xl font-bold text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors"
             >
               Cancel
